@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { UploadSection } from './components/UploadSection';
 import { AnalysisDashboard } from './components/AnalysisDashboard';
 import { SettingsModal } from './components/SettingsModal';
-import { Settings } from 'lucide-react';
+import { GuideModal } from './components/GuideModal';
+import { Settings, HelpCircle } from 'lucide-react';
 import { analyzeContent } from './lib/analyzer';
 import { generateTitlesWithGemini } from './lib/gemini';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -15,6 +16,7 @@ function App() {
 
     const [apiKey, setApiKey] = useState('');
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [isGuideOpen, setIsGuideOpen] = useState(false);
 
     useEffect(() => {
         const stored = localStorage.getItem('GEMINI_API_KEY');
@@ -93,7 +95,14 @@ function App() {
             </div>
 
             {/* Header Settings Button (Fixed) */}
-            <div className="fixed top-4 right-4 z-50">
+            <div className="fixed top-4 right-4 z-50 flex gap-2">
+                <button
+                    onClick={() => setIsGuideOpen(true)}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-600 transition-all text-sm backdrop-blur-md shadow-lg"
+                >
+                    <HelpCircle className="w-4 h-4" />
+                    <span>사용법</span>
+                </button>
                 <button
                     onClick={() => setIsSettingsOpen(true)}
                     className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-600 transition-all text-sm backdrop-blur-md shadow-lg"
@@ -109,6 +118,11 @@ function App() {
                     isOpen={isSettingsOpen}
                     onClose={() => setIsSettingsOpen(false)}
                     onSave={(key) => { setApiKey(key); setIsGeminiMode(!!key); }}
+                />
+
+                <GuideModal
+                    isOpen={isGuideOpen}
+                    onClose={() => setIsGuideOpen(false)}
                 />
 
                 {/* Header */}
